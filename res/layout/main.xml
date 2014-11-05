@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<LinearLayout
+    android:layout_width="fill_parent"
+	android:layout_height="0dip"
+	android:layout_weight="1"
+	android:weightSum="6"
+    >
+	<com.dozingcatsoftware.bouncy.ScoreView
+		android:id="@+id/scoreView"
+		android:layout_width="0dp"
+		android:layout_height="50dip"
+		android:layout_weight="5"
+	/>
+	<Button
+	    android:id="@+id/visit_cj_button" 
+	    android:layout_width="wrap_content"
+		android:layout_height="50dip"
+		android:layout_weight="1"
+		android:text="more apps"
+	/>
+	</LinearLayout>
+
+<FrameLayout android:layout_width="fill_parent" android:layout_height="0px" android:layout_weight="9">
+    
+    
+	<com.dozingcatsoftware.bouncy.CanvasFieldView  
+		android:id="@+id/canvasFieldView"
+   		android:layout_width="fill_parent" 
+    	android:layout_height="fill_parent" 
+    	android:layout_weight="1"
+    	android:visibility="gone"
+    />
+
+	<com.dozingcatsoftware.bouncy.GLFieldView  
+		android:id="@+id/glFieldView"
+   		android:layout_width="fill_parent" 
+    	android:layout_height="fill_parent" 
+    	android:layout_weight="1"
+    	android:visibility="gone"
+    />
+
+	<LinearLayout android:id="@+id/buttonPanel" android:layout_width="wrap_content" android:layout_height="wrap_content" 
+	      android:background="#8448" android:padding="10px" android:layout_gravity="center">
+				  
+		<Button android:id="@+id/switchTableButton" android:onClick="doSwitchTable"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Change Table" />
+			
+		<Button android:id="@+id/aboutButton" android:onClick="doAbout"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Help/About" />
+			
+		<Button android:id="@+id/preferencesButton" android:onClick="doPreferences"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Preferences" />
+		
+	</LinearLayout>    
+    
+</FrameLayout>
+
+</LinearLayout>
