@@ -1,9 +1,8 @@
 package com.dozingcatsoftware.bouncy;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
@@ -16,6 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+
+import com.badlogic.gdx.math.Vector2;
+import com.cj.AboutCJ;
 
 public class BouncyActivity extends Activity {
 	
@@ -46,7 +48,7 @@ public class BouncyActivity extends Activity {
 	long highScore = 0;
 	static String HIGHSCORE_PREFS_KEY = "highScore";
 	static String INITIAL_LEVEL_PREFS_KEY = "initialLevel";
-	boolean useZoom = true;
+	static boolean useZoom = true;
 	
 	static long END_GAME_DELAY = 1000; // delay after ending a game, before a touch will start a new game
 	long endGameTime = System.currentTimeMillis() - END_GAME_DELAY;
@@ -82,16 +84,11 @@ public class BouncyActivity extends Activity {
         scoreView.setHighScore(highScore);
         
         buttonPanel = findViewById(R.id.buttonPanel);
-        // TODO: allow field configuration to specify whether tilting is allowed
-        
-        orientationListener = new OrientationListener(this, SensorManager.SENSOR_DELAY_GAME,
-        		new OrientationListener.Delegate() {
-        	public void receivedOrientationValues(float azimuth, float pitch, float roll) {
-            	field.receivedOrientationValues(azimuth, pitch, roll);
-        	}
-        });
+        // my modify
+        setupTiltListener();
         
         updateFromPreferences();
+        
         // initialize audio
         VPSoundpool.initSounds(this);
         VPSoundpool.loadSounds();
@@ -100,6 +97,59 @@ public class BouncyActivity extends Activity {
     }
     Vector2 edgePosiLeft = new Vector2(1.45f, 10);
     Vector2 edgePosiRite = new Vector2(17.35f, 10 );
+    AlertDialog dialog;
+    DialogInterface.OnClickListener resumeListener = new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int whichButton) {
+			running = true;
+            handler.postDelayed(callTick, 75);
+            try{
+            	orientationListener.start();
+            }
+            catch (Exception ex){
+            	setupTiltListener();
+            	orientationListener.start();
+            }
+            fieldDriver.start();
+            if (glFieldView != null) glFieldView.onResume();
+            
+		}
+	};
+	public void setupTiltListener(){
+		orientationListener = new OrientationListener(this, SensorManager.SENSOR_DELAY_GAME,
+        		new OrientationListener.Delegate() {
+        	public void receivedOrientationValues(float azimuth, float pitch, float roll) {
+            	field.receivedOrientationValues(azimuth, pitch, roll);
+        	}
+        });
+
+	}
+	DialogInterface.OnClickListener exitListener = new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int which) {
+			 BouncyActivity.this.finish();
+		}
+	};
+	void pauseGame(){
+	 
+		running = false;
+        if (orientationListener != null) orientationListener.stop();
+
+		fieldDriver.stop();
+        if (glFieldView != null) glFieldView.onPause();
+        VPSoundpool.pauseMusic();
+        
+	}
+	public void AlertAndPause() {
+		pauseGame();
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Quit Are you Sure?");
+		builder.setIcon(android.R.drawable.ic_menu_info_details);
+		builder.setPositiveButton(android.R.string.ok, exitListener);
+		builder.setNegativeButton("NO", resumeListener);
+		dialog = builder.create();
+		dialog.show();
+	}
+		
+
     @Override 
     public void  onBackPressed(){
     	Log.d("ACTIVITIMAIN", "clicked.");
@@ -112,16 +162,26 @@ public class BouncyActivity extends Activity {
 //			}
 //    	}
 //    	ALERT AND EXIT
+    	AlertAndPause();
    	
     }
 
+    @Override 
+    public void onResume(){
+    	buttonPanel.setVisibility(View.GONE);
+    	super.onResume();
+    }
+    @Override 
+    public void onStart(){
+    	super.onStart();
+    }
     void gotoPreferences() {
 		Intent settingsActivity = new Intent(getBaseContext(), BouncyPreferences.class);
 		startActivityForResult(settingsActivity, ACTIVITY_PREFERENCES);
     }
     
     void gotoAbout() {
-    	AboutActivity.startForLevel(this, this.level);
+    	startActivity(new Intent(this, AboutCJ.class));
     }
 
     @Override
@@ -129,18 +189,13 @@ public class BouncyActivity extends Activity {
     	// this handles the main activity pausing and resuming, as well as the Android menu appearing and disappearing
         super.onWindowFocusChanged(hasWindowFocus);
         if (!hasWindowFocus) {
-            running = false;
-            if (orientationListener != null) orientationListener.stop();
-
-            fieldDriver.stop();
-            if (glFieldView != null) glFieldView.onPause();
-            VPSoundpool.pauseMusic();
+           
+            pauseGame();
         } 
         else {
             running = true;
             handler.postDelayed(callTick, 75);
-            if (orientationListener != null) orientationListener.start();
-
+            if (orientationListener!=null && ! orientationListener.isRunning) orientationListener.start();
             fieldDriver.start();
             if (glFieldView != null) glFieldView.onResume();
         }

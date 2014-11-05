@@ -21,7 +21,7 @@
 	    android:layout_width="wrap_content"
 		android:layout_height="50dip"
 		android:layout_weight="1"
-		android:text="more apps"
+		android:text="CJ\'s"
 	/>
 	</LinearLayout>
 
@@ -51,7 +51,7 @@
 			android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Change Table" />
 			
 		<Button android:id="@+id/aboutButton" android:onClick="doAbout"
-			android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Help/About" />
+			android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="About CJ" />
 			
 		<Button android:id="@+id/preferencesButton" android:onClick="doPreferences"
 			android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Preferences" />

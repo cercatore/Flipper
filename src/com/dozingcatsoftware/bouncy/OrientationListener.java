@@ -31,7 +31,7 @@ public class OrientationListener implements SensorEventListener {
 	int rate;
 	Delegate delegate;
 	SensorManager sensorManager;
-	
+	public boolean isRunning = false; 
 	/** Creates an OrientationListener with the given rate and callback delegate. Does not start listening for sensor events until start() is called.
 	 * @param context Context object, typically either an Activity or getContext() from a View 
 	 * @param rate constant from SensorManager, e.g. SensorManager.SENSOR_DELAY_GAME
@@ -78,6 +78,7 @@ public class OrientationListener implements SensorEventListener {
 	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		isRunning = true;
 		switch(event.sensor.getType()) {
 		case Sensor.TYPE_MAGNETIC_FIELD:
 			mags = event.values.clone();
@@ -107,15 +108,26 @@ public class OrientationListener implements SensorEventListener {
         if (shake && !timer.isRunning()){
 	        Body ball = BouncyActivity.field.getLiveBall();
 	    	if ( ball != null ) { // && ball.getPosition().y <= 5 ){
-	    		Vector2 impulse;
-	    		if (ball.getPosition().y < 2.5)
-	    			impulse = new Vector2(shakeZvalue / 5, 4f);
-	    		else
-	    			impulse = new Vector2(shakeZvalue / 5, 2.5f);
-	    		if (impulse!=null) {
-					ball.applyLinearImpulse(impulse, ball.getWorldCenter());
+	    		if (BouncyActivity.useZoom){
+	    			Vector2 impulse;
+	    			if (ball.getPosition().y < 2.5)
+	    				impulse = new Vector2(shakeZvalue / 5, 4f);
+	    			else
+	    				impulse = new Vector2(shakeZvalue / 5, 2.5f);
+	    			if (impulse!=null) 
+	    				ball.applyLinearImpulse(impulse, ball.getWorldCenter());
 					//flashForFrames(3);
-				}
+	    		}
+	    		else { // divide 1.4
+	    			Vector2 impulse;
+	    			if (ball.getPosition().y < 2.5 / 1.4 )
+	    				impulse = new Vector2(shakeZvalue / 5, 4f / 1.4f);
+	    			else
+	    				impulse = new Vector2(shakeZvalue / 5, 2.5f / 1.4f);
+	    			if (impulse!=null) 
+	    				ball.applyLinearImpulse(impulse, ball.getWorldCenter());
+					
+	    		}
 	    		timer = new TimeTicker();
 	    		timer.start();
 	    	}

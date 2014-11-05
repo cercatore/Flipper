@@ -12,6 +12,7 @@ public final class R {
     }
     public static final class drawable {
         public static final int icon=0x7f020000;
+        public static final int splash_v2=0x7f020001;
     }
     public static final class id {
         public static final int aboutButton=0x7f070007;
@@ -27,6 +28,7 @@ public final class R {
     public static final class layout {
         public static final int about=0x7f030000;
         public static final int main=0x7f030001;
+        public static final int splash_main=0x7f030002;
     }
     public static final class raw {
         public static final int androidpad=0x7f050000;
