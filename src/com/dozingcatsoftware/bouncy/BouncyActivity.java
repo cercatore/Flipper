@@ -102,7 +102,7 @@ public class BouncyActivity extends Activity {
     Vector2 edgePosiRite = new Vector2(17.35f, 10 );
     @Override 
     public void  onBackPressed(){
-    	Log.d("ACTIVITIMAIN", "clic.ked");
+    	Log.d("ACTIVITIMAIN", "clicked.");
 //    	Body ball = field.getLiveBall();
 //    	if ( ball != null ) { // && ball.getPosition().y <= 5 ){
 //    		Vector2 impulse = new Vector2(0, 2.5f);
@@ -112,8 +112,7 @@ public class BouncyActivity extends Activity {
 //			}
 //    	}
 //    	ALERT AND EXIT
-    	
-    	
+   	
     }
 
     void gotoPreferences() {
