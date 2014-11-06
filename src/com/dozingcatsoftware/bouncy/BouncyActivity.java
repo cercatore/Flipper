@@ -54,9 +54,10 @@ public class BouncyActivity extends Activity {
 	long endGameTime = System.currentTimeMillis() - END_GAME_DELAY;
 	
 	FieldDriver fieldDriver = new FieldDriver();
+	SharedPreferences prefs;
 	FieldViewManager fieldViewManager = new FieldViewManager();
 	OrientationListener orientationListener;
-
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class BouncyActivity extends Activity {
         setupTiltListener();
         
         updateFromPreferences();
+        boolean flippers = prefs.getBoolean("independentFlippers", false);
         
         // initialize audio
         VPSoundpool.initSounds(this);
@@ -244,7 +246,7 @@ public class BouncyActivity extends Activity {
 
     // Update settings from preferences, called at launch and when preferences activity finishes
     void updateFromPreferences() {
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+    	prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
     	fieldViewManager.setIndependentFlippers(prefs.getBoolean("independentFlippers", false));
     	scoreView.setShowFPS(prefs.getBoolean("showFPS", false));
 
