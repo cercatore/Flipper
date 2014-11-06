@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Vector Pinball</string>
+    <string name="app_name">CJ Tilt Pinball</string>
     <string name="about_menu_item">About/Help</string>
     <string name="end_game_menu_item">End Game</string>
     <string name="preferences_menu_item">Preferences</string>
